@@ -1,11 +1,9 @@
 % Function that computes the underlying cosine function,
 % assuming phase shifts of 2*pi/3 and 4*pi/3
-function phase = computePhase(values)
-    [Acosx, value2, value3] = deal(values);
-
+function phase = computePhase(Acosx, value2, value3)
     Asinx = (value3 - value2) / sqrt(3);
     A     = sqrt(Asinx^2 + Acosx^2);
-    cosx  = value1 / A;
+    cosx  = Acosx / A;
     sinx  = Asinx / A;
 
     guess = acos(cosx);
