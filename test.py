@@ -47,22 +47,17 @@ def main():
 
     print im1[1000][1000][1], im2[1000][1000][1], im3[1000][1000][1], im4[1000][1000][1], im5[1000][1000][1]
 
-    # phase1 = compute_phase(im1)
-    # phase2 = compute_phase(im2)
-    # phase3 = compute_phase(im3)
-
-
 @np.vectorize
 def compute_phase(Acosx, value2, value3):
-    Asinx = (value3 - value2) / sqrt(3)
-    A     = sqrt(Asinx ** 2 + Acosx ** 2)
-    cosx  = value1 / A
+    Asinx = (value3 - value2) / (3 ** 0.5)
+    A     = (Asinx ** 2 + Acosx ** 2) ** 0.5
+    cosx  = Acosx / A
     sinx  = Asinx / A
 
     guess = acos(cosx)
 
     # Verify that the sign of the sine is correct
-    if sin(guess) * sinx > 0:
+    if sin(guess) * sinx >= 0:
         phase = guess
     else:
         phase = -guess
