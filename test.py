@@ -12,12 +12,14 @@ from scipy import stats
 
 def pick_pixel(x, y):
     cos_values = []
-    for image_number in xrange(0, 15):
-        image_path = "Burst/%d.png" % image_number
+    for image_number in xrange(0, 5):
+        image_path = "consistency_check/%d.png" % image_number
         image = pl.imread(image_path) * 2 - 1
         cos_values.append(image[x][y][1])
+        print image_path
 
     pickle.dump(cos_values, open("cos_values.pickle", "w"))
+    print cos_values
     plot_pixel()
 
 
@@ -26,12 +28,12 @@ def plot_pixel():
     cos_values = np.array(cos_values)
 
     x = np.arange(0, len(cos_values))
-    y = cos_values
-    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-    for i in x:
-        cos_values[i] = cos_values[i] - (slope * i + intercept)
+    # y = cos_values
+    # slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    # for i in x:
+    #     cos_values[i] = cos_values[i] - (slope * i + intercept)
 
-    pl.plot(x, 5 * cos_values, "o")
+    pl.plot(x, cos_values, "o")
     # t = np.arange(0, len(cos_values), 0.1)
     # pl.plot(t, .12 * np.cos(2.0 * t - 1.5))
     pl.axis([0, len(cos_values), -1, 1])
