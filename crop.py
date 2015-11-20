@@ -13,7 +13,8 @@ def crop(start, end, folder):
         output_name = "%s/%d.png" % (folder, count)
         count += 1
         im = Image.open(image_name)
-        im.crop((800, 300, w - 800, h - 500)).save(output_name)
+        # im.crop((800, 300, w - 800, h - 500)).save(output_name)
+        im.crop((1000, 500, w - 1000, h - 700)).save(output_name)
         print image_name
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import sys
 
 from math import *
 import cPickle as pickle
+from PIL import Image
 
 import numpy as np
 import pylab as pl
@@ -40,14 +41,29 @@ def plot_pixel():
     pl.show()
 
 
-def main():
-    im1 = pl.imread("images/0.png")
-    im2 = pl.imread("images/1.png")
-    im3 = pl.imread("images/2.png")
-    im4 = pl.imread("images/3.png")
-    im5 = pl.imread("images/4.png")
+def rgb2gray(rgb):
 
-    print im1[1000][1000][1], im2[1000][1000][1], im3[1000][1000][1], im4[1000][1000][1], im5[1000][1000][1]
+    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
+    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
+
+    return gray
+
+
+def main():
+    im1 = rgb2gray(pl.imread("consistency_check/0.png")) * 2 - 1
+    im2 = rgb2gray(pl.imread("consistency_check/1.png")) * 2 - 1
+    im3 = rgb2gray(pl.imread("consistency_check/2.png")) * 2 - 1
+
+    result = compute_phase(im1, im2, im3)
+    pickle.dump(result, open("phase.pickle", "w"))
+
+
+def show_phase():
+    result = pickle.load(open("phase.pickle", "r"))
+    image = result / (2 * 3.1416) + 0.5
+    img = Image.fromarray(np.uint8(image * 255))
+    img.save("output.png")
+
 
 @np.vectorize
 def compute_phase(Acosx, value2, value3):
