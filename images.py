@@ -10,7 +10,7 @@ def computePhase(pixel1, pixel2, pixel3):
   if math.sin(guess) * Asinx < 0:
     guess = -guess
 
-  return guess
+  return guess % (2 * math.pi)
 
 def getBasePhases(height, width):
   x0 = width / 2
@@ -19,7 +19,9 @@ def getBasePhases(height, width):
   for y in xrange(height):
     basePhases.append([])
     for x in xrange(width):
-      phase = 2 * math.pi * math.exp(- (x - x0) ** 2 - (y - y0) ** 2)
+      exponent  = -(4 * (x - x0)**2) / (float(width**2))
+      exponent += -(4 * (y - y0)**2) / (float(height**2))
+      phase     = 2 * math.pi * math.exp(exponent)
       basePhases[y].append(phase % (2 * math.pi))
   return basePhases
 
@@ -33,9 +35,8 @@ def getObjectPhases(height, width):
       basePhases[row][col] = (basePhases[row][col] * multiplier + phaseShift) % (2 * math.pi)
   return basePhases
 
-def makeImages(height, width, numImages = 3, phaseShift = 2 * math.pi / 3):
+def makeImages(height, width, numImages = 3, phaseShift = 2 * math.pi / 3, testing = False):
   # Removes randomness from the object of interest for testing
-  testing = False
   if testing:
     interest = getBasePhases(height, width)
   else:
@@ -49,7 +50,9 @@ def makeImages(height, width, numImages = 3, phaseShift = 2 * math.pi / 3):
     for row in xrange(height):
       images[image].append([])
       for col in xrange(width):
-        images[image][row].append(A * math.cos(interest[row][col] + image * phaseShift) + B * math.cos(reference[row][col]))
+        interestIntensity  = A * math.cos(interest[row][col] + image * phaseShift)
+        referenceIntensity = B * math.cos(reference[row][col])
+        images[image][row].append(interestIntensity + referenceIntensity)
   return images
 
 def computePhaseFromThreeImages(images):
@@ -61,3 +64,18 @@ def computePhaseFromThreeImages(images):
     for col in xrange(length):
       result[row].append(computePhase(images[0][row][col], images[1][row][col], images[2][row][col]))
   return result
+
+def testComputePhaseWithThreeImages():
+  height = 50
+  width  = 50
+  images = makeImages(height, width, 3, 2 * math.pi / 3, True)
+  phases = computePhaseFromThreeImages(images)
+  expectedPhases = getBasePhases(height, width)
+
+  for row in xrange(height):
+    for col in xrange(width):
+      print phases[row][col], expectedPhases[row][col]
+      if abs(phases[row][col] - expectedPhases[row][col]) > 0.01:
+        raise Exception('Phases not recovered, test failed.')
+
+  return
