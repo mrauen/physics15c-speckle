@@ -4,6 +4,7 @@
 import math, random
 
 import numpy as np
+from PIL import Image
 
 
 @np.vectorize
@@ -33,6 +34,11 @@ def getBasePhases(height, width):
       exponent += -(4 * (y - y0)**2) / (float(height**2))
       phase     = 2 * math.pi * math.exp(exponent)
       basePhases[y].append(phase % (2 * math.pi))
+
+  # Save image
+  PIL_image = Image.fromarray(np.uint8(np.array(basePhases) * 255))
+  PIL_image.save("base_phase.png")
+
   return basePhases
 
 def getObjectPhases(height, width):
