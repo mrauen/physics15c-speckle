@@ -1,10 +1,20 @@
 #!npython
+# flake8: noqa
+
 import math, random
 
+import numpy as np
+
+
+@np.vectorize
 def computePhase(pixel1, pixel2, pixel3):
   Asinx = (pixel3 - pixel2) / (3 ** 0.5)
   Acosx = -2 * (pixel3 * 0.5 + pixel2 * 0.5 - pixel1) / 3
   A     = (Asinx ** 2 + Acosx ** 2) ** 0.5
+
+  # Is this the right way to handle this case?
+  if A == 0 and Acosx == 0:
+    return 0
 
   guess = math.acos(Acosx / A)
   if math.sin(guess) * Asinx < 0:
@@ -65,6 +75,10 @@ def computePhaseFromThreeImages(images):
       result[row].append(computePhase(images[0][row][col], images[1][row][col], images[2][row][col]))
   return result
 
+# Vectorized version of the above (faster iteration over pixels)
+def computePhaseFromThreeImagesVec(images):
+  return computePhase(images[0], images[1], images[2])
+
 def testComputePhaseWithThreeImages():
   height = 50
   width  = 50
@@ -77,5 +91,20 @@ def testComputePhaseWithThreeImages():
       print phases[row][col], expectedPhases[row][col]
       if abs(phases[row][col] - expectedPhases[row][col]) > 0.01:
         raise Exception('Phases not recovered, test failed.')
+
+  return
+
+# Unit test: computePhaseFromThreeImages equivalent to computePhaseFromThreeImagesVec
+def testComputePhaseFromThreeImagesVec():
+  height = 50
+  width  = 50
+  images = makeImages(height, width, 3, 2 * math.pi / 3, True)
+  phases1 = computePhaseFromThreeImages(images)
+  phases2 = computePhaseFromThreeImagesVec(images)
+
+  for row in xrange(height):
+    for col in xrange(width):
+      if abs(phases1[row][col] - phases2[row][col]) > 0.01:
+        raise Exception('Differing phases, test failed')
 
   return
