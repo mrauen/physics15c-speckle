@@ -51,8 +51,8 @@ def rgb2gray(rgb):
 
 def main():
     import math
-    transformation = np.vectorize(math.sqrt)
-    #transformation = np.vectorize(lambda x: x ** 2)
+    #transformation = np.vectorize(math.sqrt)
+    transformation = np.vectorize(lambda x: x ** 2)
     im1 = transformation(rgb2gray(pl.imread("cosine_check/0.png"))) * 2 - 1
     im2 = transformation(rgb2gray(pl.imread("cosine_check/1.png"))) * 2 - 1
     im3 = transformation(rgb2gray(pl.imread("cosine_check/2.png"))) * 2 - 1

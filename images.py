@@ -23,6 +23,10 @@ def computePhase(pixel1, pixel2, pixel3):
 
   return guess % (2 * math.pi)
 
+def saveImage(array, filename):
+  PIL_image = Image.fromarray(np.uint8(np.array(array) * 255))
+  PIL_image.save(filename)
+
 def getBasePhases(height, width):
   x0 = width / 2
   y0 = height / 2
@@ -36,8 +40,7 @@ def getBasePhases(height, width):
       basePhases[y].append(phase % (2 * math.pi))
 
   # Save image
-  PIL_image = Image.fromarray(np.uint8(np.array(basePhases) * 255))
-  PIL_image.save("base_phase.png")
+  saveImage(basePhases, "base_phase.png")
 
   return basePhases
 
@@ -59,16 +62,22 @@ def makeImages(height, width, numImages = 3, phaseShift = 2 * math.pi / 3, testi
     interest = getObjectPhases(height, width)
 
   reference = getObjectPhases(height, width)
-  A = random.uniform(1, 20)
-  B = random.uniform(1, 20)
-  images = [[] for _ in xrange(numImages)]
-  for image in xrange(numImages):
-    for row in xrange(height):
-      images[image].append([])
-      for col in xrange(width):
+  # Create an empty array with dimensions numImages x height x width
+  images = np.empty([numImages, height, width])
+  for row in xrange(height):
+    for col in xrange(width):
+      A = random.uniform(1, 20)
+      B = random.uniform(1, 20)
+      for image in xrange(numImages):
         interestIntensity  = A * math.cos(interest[row][col] + image * phaseShift)
         referenceIntensity = B * math.cos(reference[row][col])
-        images[image][row].append(interestIntensity + referenceIntensity)
+        images[image][row][col] = interestIntensity + referenceIntensity
+
+  # Save images
+  saveImage(images[0], "sample_input_1.png")
+  saveImage(images[1], "sample_input_2.png")
+  saveImage(images[2], "sample_input_3.png")
+
   return images
 
 def computePhaseFromThreeImages(images):
