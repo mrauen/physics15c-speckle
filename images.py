@@ -74,9 +74,8 @@ def makeImages(height, width, numImages = 3, phaseShift = 2 * math.pi / 3, testi
         images[image][row][col] = interestIntensity + referenceIntensity
 
   # Save images
-  saveImage(images[0], "sample_input_1.png")
-  saveImage(images[1], "sample_input_2.png")
-  saveImage(images[2], "sample_input_3.png")
+  for image in xrange(numImages):
+    saveImage(images[image], "sample_input_%d.png" % (image + 1))
 
   return images
 
