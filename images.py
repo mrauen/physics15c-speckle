@@ -2,8 +2,11 @@
 # flake8: noqa
 
 import math, random
+import cPickle as pickle
 
 import numpy as np
+import scipy
+import pylab as pl
 from PIL import Image
 
 
@@ -21,7 +24,54 @@ def computePhase(pixel1, pixel2, pixel3):
   if math.sin(guess) * Asinx < 0:
     guess = -guess
 
-  return guess % (2 * math.pi)
+  return A
+  #return guess % (2 * math.pi)
+
+##### image differences
+
+def rgb2gray(rgb):
+    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
+    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
+    return gray
+
+def computeImageDifferences(numPictures):
+  first = rgb2gray(pl.imread("reference/0.png"))
+  others = []
+  for num in xrange(1, numPictures + 1):
+    others.append(rgb2gray(pl.imread("reference/%d.png" % num)))
+    print num
+  result = np.array(others) - first
+  #pickle.dump(result, open("computeImageDifference.pickle", "w"))
+  return result
+
+def showImageDifferences(numPictures, x = 1000, y = 1000):
+  data = []
+  result = computeImageDifferences(numPictures)
+  #result = pickle.load(open("computeImageDifference.pickle", "r"))
+  for image in result:
+    data.append(image[x][y])
+
+  cos_values = np.array(data)
+
+  x = np.arange(0, len(cos_values))
+  pl.plot(x, cos_values, "o")
+  pl.axis([0, len(cos_values), -1, 1])
+  pl.show()
+
+def getRMS(numPictures):
+  data = []
+  result = 10 * computeImageDifferences(numPictures) ** 2
+  for image in result:
+    data.append(np.average(image))
+
+  cos_values = np.array(data)
+
+  x = np.arange(0, len(cos_values))
+  pl.plot(x, cos_values, "o")
+  pl.axis([0, len(cos_values), -1, 1])
+  pl.show()
+
+##### end image differences
 
 def saveImage(array, filename):
   PIL_image = Image.fromarray(np.uint8(np.array(array) * 255))

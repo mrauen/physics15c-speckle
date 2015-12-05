@@ -1,11 +1,14 @@
 #!npython
 
-# ./run.py function_name parameter1 parameter2
+# Usage: ./run.py function_name parameter1 parameter2
+# Doing alias run="./run.py" allows the nicer form:
+# run function_name parameter1 parameter2
 
 import sys
 
 from test import *
 from images import *
+from utils import *
 
 if __name__ == "__main__":
     function = sys.argv[1]

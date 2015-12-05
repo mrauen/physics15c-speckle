@@ -49,20 +49,29 @@ def rgb2gray(rgb):
     return gray
 
 
-def main():
+def computePhaseFirstThree(folder):
     import math
     #transformation = np.vectorize(math.sqrt)
-    transformation = np.vectorize(lambda x: x ** 2)
-    im1 = transformation(rgb2gray(pl.imread("cosine_check/0.png"))) * 2 - 1
-    im2 = transformation(rgb2gray(pl.imread("cosine_check/1.png"))) * 2 - 1
-    im3 = transformation(rgb2gray(pl.imread("cosine_check/2.png"))) * 2 - 1
+    #transformation = np.vectorize(lambda x: x ** 2)
+    transformation = np.vectorize(lambda x: x)  # identity
+    im1 = transformation(rgb2gray(pl.imread("%s/0.png" % folder)))
+    im2 = transformation(rgb2gray(pl.imread("%s/1.png" % folder)))
+    im3 = transformation(rgb2gray(pl.imread("%s/2.png" % folder)))
 
     result = images.computePhase(im1, im2, im3)
-    pickle.dump(result, open("phase.pickle", "w"))
+    pickle.dump(result, open("%s.pickle" % folder, "w"))
 
 
-def show_phase():
-    result = pickle.load(open("phase.pickle", "r"))
-    image = result / (2 * 3.1416) + 0.5
+def show_phase(folder):
+    result = pickle.load(open("%s.pickle" % folder, "r"))
+    image = result / (2 * pi) + 0.5
     img = Image.fromarray(np.uint8(image * 255))
-    img.save("output.png")
+    img.save("%s.png" % folder)
+
+
+def diff_images(input1, input2, output):
+    im1 = pl.imread(input1)
+    im2 = pl.imread(input2)
+    diff = (im1 - im2 + 1) % 1
+    img = Image.fromarray(np.uint8(diff * 255))
+    img.save(output)

@@ -14,10 +14,9 @@ def crop(start, end, folder):
         count += 1
         im = Image.open(image_name)
         # im.crop((800, 300, w - 800, h - 500)).save(output_name)
-        im.crop((1000, 500, w - 1000, h - 700)).save(output_name)
+        im.crop((700, 500, 1200 + 1000, 1000 + 1000)).save(output_name)
         print image_name
 
 if __name__ == "__main__":
-    start, end = sys.argv[1:]
-    folder = "consistency_check"
+    folder, start, end = sys.argv[1:]
     crop(int(start), int(end), folder)
