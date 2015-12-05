@@ -75,3 +75,9 @@ def diff_images(input1, input2, output):
     diff = (im1 - im2 + 1) % 1
     img = Image.fromarray(np.uint8(diff * 255))
     img.save(output)
+
+computePhaseFirstThree('reference')
+computePhaseFirstThree('shifted')
+show_phase('reference')
+show_phase('shifted')
+diff_images('reference.png', 'shifted.png', 'output.png')
