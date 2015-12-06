@@ -6,7 +6,7 @@ from PIL import Image
 
 import numpy as np
 import pylab as pl
-from scipy import stats
+#from scipy import stats
 
 import images
 
@@ -73,6 +73,16 @@ def diff_images(input1, input2, output):
     im1 = pl.imread(input1)
     im2 = pl.imread(input2)
     diff = (im1 - im2 + 1) % 1
+    for _ in xrange(5):
+        newDiff = []
+        for row in xrange(len(diff)):
+            newDiff.append([])
+            for col in xrange(len(diff[row])):
+                adjacentPixels = [(row - 1, col - 1), (row, col - 1), (row - 1, col), (row - 1, col + 1), (row + 1, col - 1), (row + 1, col + 1), (row, col + 1), (row + 1, col)]
+                adjacentPixels = [(r, c) for (r, c) in adjacentPixels if r >= 0 and r < len(diff) and c >= 0 and c < len(diff[row])]
+                adjacentValues = [diff[r][c] for (r, c) in adjacentPixels]
+                newDiff[row].append(sum(adjacentValues) / len(adjacentValues))
+        diff = newDiff
     img = Image.fromarray(np.uint8(diff * 255))
     img.save(output)
 
