@@ -81,9 +81,10 @@ def diff_images(input1, input2, output):
                 adjacentPixels = [(row - 1, col - 1), (row, col - 1), (row - 1, col), (row - 1, col + 1), (row + 1, col - 1), (row + 1, col + 1), (row, col + 1), (row + 1, col)]
                 adjacentPixels = [(r, c) for (r, c) in adjacentPixels if r >= 0 and r < len(diff) and c >= 0 and c < len(diff[row])]
                 adjacentValues = [diff[r][c] for (r, c) in adjacentPixels]
-                newDiff[row].append(sum(adjacentValues) / len(adjacentValues))
+                averageValue   = sum(adjacentValues) / len(adjacentValues)
+                newDiff[row].append(0.2 * averageValue + 0.8 * diff[row][col])
         diff = newDiff
-    img = Image.fromarray(np.uint8(diff * 255))
+    img = Image.fromarray(np.uint8(np.array(diff) * 255))
     img.save(output)
 
 computePhaseFirstThree('reference')
