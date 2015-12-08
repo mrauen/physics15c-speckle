@@ -66,18 +66,19 @@ We shine the laser into a beam splitter, which sends light at both piezos, and c
 
 \section{Analysis}
 \begin{frame}{Calculating Absolute Phases}
-If we assume that we have images where the phases have shifted by exactly $\frac13$ of a wavelength, we find the phase of the wave for each pixel by taking the following differences
+\small
+If we assume that we have images where the phases have shifted by exactly $\frac13$ of a wavelength, for a particular pixel, we have that
 \begin{align*}
-	A\sin(x) &= \frac{pixel3 - pixel2}{\sqrt 3}\\
-	A\cos(x) &= -\frac23 \left(\frac{pixel3 + pixel2}{2} - pixel1\right)
+P1 &= A\cos (x)+b_0\\
+P2 &= A\cos (x+2\pi /3)+b_0\\
+P3 &= A\cos (x+4\pi /3)+b_0.
 \end{align*}
-%Note that $b_0$ disappears when taking these differences. 
-From this point $A$ is just
-$$A = \sqrt{[A\sin(x)]^2 + [A\cos(x)]^2}$$
-From this we can find the phase
-$$x = \cos^{-1}\left(\frac{A\cos(x)}{A}\right)$$
-% if math.sin(guess) * Asinx < 0:
-% guess = -guess
+From this, we can derive that
+\begin{align*}
+	A\sin(x) &= \frac{P3-P2}{\sqrt 3}\\
+	A\cos(x) &= -\frac23 \left(\frac{P2+P_3}{2}-P1\right).
+\end{align*}
+From these two quantities it is easy to solve for $A$ and $x$.
 \end{frame}
 
 \begin{frame}{Calculating Absolute Phases}
@@ -109,8 +110,8 @@ We found that 0.95 to 1.0 volts corresponded to a phase shift of one wavelength 
 \begin{frame}{Calculating Relative Phases}
 We took photos of speckle patterns for the following:
 \begin{itemize}
-	\item piezo at 0V, varying the voltate of the reference
-	\item piezo at $\frac12$V, varying the voltate of the reference
+	\item piezo at 0V, varying the voltage of the reference
+	\item piezo at $\frac12$V, varying the voltage of the reference
 \end{itemize}
 By running the absolute phase calculations for both sets of images, we were able to get phases for each pixel of each set.
 
