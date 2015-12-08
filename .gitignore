@@ -1,0 +1,12 @@
+*.aux
+*.nav
+*.pdf
+*.snm
+*.toc
+*.synctex
+*.synctex.gz
+*.snm
+*.out
+*.log
+*.pyc
+*.pickle
