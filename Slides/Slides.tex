@@ -63,15 +63,55 @@ Therefore, if we translate the reference object, while holding the object of int
 
 \section{Analysis}
 \begin{frame}{Calculating Absolute Phases}
-
+If we assume that we have images where the phases have shifted by exactly $\frac13$ of a wavelength, we find the phase of the wave for each pixel by taking the following differences
+\begin{align*}
+	A\sin(x) &= \frac{pixel3 - pixel2}{\sqrt 3}\\
+	A\cos(x) &= -\frac23 \left(\frac{pixel3 + pixel2}{2} - pixel1\right)
+\end{align*}
+%Note that $b_0$ disappears when taking these differences. 
+From this point $A$ is just
+$$A = \sqrt{[A\sin(x)]^2 + [A\cos(x)]^2}$$
+From this we can find the phase
+$$x = \cos^{-1}\left(\frac{A\cos(x)}{A}\right)$$
+% if math.sin(guess) * Asinx < 0:
+% guess = -guess
 \end{frame}
 
 \begin{frame}{Calculating Absolute Phases}
+In order to sample at exactly $\frac13$ of a wavelength, we needed to determine how the reference piezo responds to voltage.
 
+\vspace{.5cm}
+The interference patterns are periodic, they will repeat their patterns after the reference object has moved by exactly $\frac12$ a wavelength. We did this by manual adjusting the voltage until the same pattern was seen, and recording the voltage.
+
+\vspace{.5cm}
+We found that 0.95 to 1.0 volts corresponded to a shift of half a wavelength in the reference piezo (a one wavelength shift in the phase of the the light from the reference piezo)
+% \begin{center}
+% {\bf One wavelength shift}\\
+% \includegraphics[width=.16\textwidth]{apertures/32.png}
+% \includegraphics[width=.16\textwidth]{apertures/32.png}
+% \end{center}
+
+% \begin{center}
+% {\bf Plot of amplitude vs voltage}
+% (for an arbitrary pixel)
+% \includegraphics[width=\textwidth]{cosine_check.png}
+% \end{center}
+
+% By varying voltages at a fixed rate with our function generator, and taking pictures of the speckles at fixed intervals using the ``burst mode'' of our camera, we were able to record how the amplitude of each pixel responds to offsets in the reference object.
+
+% Note that these points were sampled at $x = 0, \frac{2\pi}{3}, \frac{4\pi}{3},...$, which is necesary to calculate the absolute phase.
 \end{frame}
 
 \begin{frame}{Calculating Relative Phases}
+We took photos of speckle patterns for the following:
+\begin{itemize}
+	\item piezo at 0V, varying the voltate of the reference
+	\item piezo at $\frac12$V, varying the voltate of the reference
+\end{itemize}
+By running the absolute phase calculations for both sets of images, we were able to get phases for each pixel of each set.
 
+\vspace{0.5cm}
+Taking the differences of the absolute phases gives us a relative phase for each pixel of the image. This corresponds to how much each point on the piezo has shifted.
 \end{frame}
 
 \section{Results}
